@@ -2,6 +2,7 @@
 #include <cstdint>
 #include "bitset.hpp"
 #include "bitmask.hpp"
+#include "optional.hpp"
 
 enum PowerMode : unsigned char
 {
@@ -33,6 +34,7 @@ int main()
     BitMask<Color, static_cast<unsigned char>(Color::MaxValue)> color;
     // BitMask<Suit, 8> suit;
     BitSet<uint8_t, 8> mask;
+    optional<int> opt;
     std::cout << "Hello, world!" << std::endl;
     return 0;
 }
