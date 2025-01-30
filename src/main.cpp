@@ -3,6 +3,7 @@
 #include "bitset.hpp"
 #include "bitmask.hpp"
 #include "optional.hpp"
+#include "bimap.hpp"
 
 enum PowerMode : unsigned char
 {
