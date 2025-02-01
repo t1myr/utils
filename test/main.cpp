@@ -1,8 +1,9 @@
 #include <iostream>
+#include "src/bitmask_test.cpp"
 
 
-int main()
+int main(int argc, char* argv[])
 {
-    std::cout << "Hello, world!" << std::endl;
-    return 0;
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
