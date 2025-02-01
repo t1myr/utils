@@ -22,6 +22,18 @@ struct BitMask
 	constexpr BitMask() = default;
 
 	/**
+	 * @brief Конструктор копирования
+	 * @param other другой BitMask
+	 */
+	constexpr BitMask(const BitMask& other) = default;
+
+	/**
+	 * @brief Конструктор перемещения
+	 * @param other другой BitMask
+	 */
+	constexpr BitMask(BitMask&& other) = default;
+
+	/**
 	 * @brief Конструктор с parameter pack
 	 * @param indexes Список индексов, биты котоорых нужно установить в наборе
 	 * @tparam Args Parameter pack из индексов битов, которые нужно выставить в наборе. Должен быть того же типа, что и Enum
@@ -48,6 +60,10 @@ struct BitMask
 		_value = value & mask;
 	}
 
+	Bitmask& operator=(const BitMask& other) = default;
+
+	Bitmask& operator=(BitMask&& other) = default;
+
 	/**
 	 * @brief Оператор списковой инициализации
 	 * @param list Список из индексов битов, которые нужно выставить в 1
@@ -65,16 +81,18 @@ struct BitMask
 	}
 
 	/**
-	 * @brief Конструктор копирования
-	 * @param other другой BitMask
+	 * @brief Оператор присваивания от целого
+	 * @param value Значение типа, который хранится в наборе
+	 * @tparam T Тип значения. Должен быть таким же, как и тип элемента набора
 	 */
-	BitMask(const BitMask& other) = default;
-
-	/**
-	 * @brief Конструктор перемещения
-	 * @param other другой BitMask
-	 */
-	BitMask(BitMask&& other) = default;
+	BitMask& operator=(type_t value) noexcept
+	{
+		//когда присваиваем значение обрезаем лишние биты
+		type_t mask = ~static_cast<type_t>(0);
+		mask >>= sizeof(type_t) * allignment - N;
+		_value = value & mask;
+		return *this;
+	}
 
 	/**
 	 * @brief Приводим BitMask к значению типа, который хранится в наборе
@@ -171,7 +189,7 @@ struct BitMask
 	}
 
 	/**
-	 * @brief Проверяем, выставлены ли все биты в наборе
+	 * @brief Проверяем, выставлены ли все биты в наборе. Корректно работает только если ваше перечисление подразумевает инкрементную последовательность
 	 * @return true, если все биты в наборе выставлены, иначе false
 	 */
 	inline bool all() const noexcept
@@ -202,6 +220,20 @@ struct BitMask
 		{
 			set_impl(arg);
 		}
+	}
+
+	/**
+	 * @brief Устанавливаем значение в маску. Затирает все предыдущие значения
+	 * @param value Значение типа, который хранится в наборе
+	 * @tparam T Тип значения. Должен быть таким же, как и тип элемента набора
+	 */
+	inline void set(type_t value) noexcept
+	{
+		//когда присваиваем значение обрезаем лишние биты
+		type_t mask = ~static_cast<type_t>(0);
+		mask >>= sizeof(type_t) * allignment - N;
+		_value = value & mask;
+		return *this;
 	}
 
 	/**
