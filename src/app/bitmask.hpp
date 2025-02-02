@@ -60,9 +60,9 @@ struct BitMask
 		_value = value & mask;
 	}
 
-	Bitmask& operator=(const BitMask& other) = default;
+	BitMask& operator=(const BitMask& other) = default;
 
-	Bitmask& operator=(BitMask&& other) = default;
+	BitMask& operator=(BitMask&& other) = default;
 
 	/**
 	 * @brief Оператор списковой инициализации
@@ -233,7 +233,6 @@ struct BitMask
 		type_t mask = ~static_cast<type_t>(0);
 		mask >>= sizeof(type_t) * allignment - N;
 		_value = value & mask;
-		return *this;
 	}
 
 	/**

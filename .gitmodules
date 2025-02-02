@@ -1,4 +1,4 @@
-[submodule "/home/timur/projects/utils/test/lib/googletest"]
+[submodule "test/lib/googletest"]
 	path = test/lib/googletest
 	url = https://github.com/google/googletest.git
 	branch = v1.15.x
