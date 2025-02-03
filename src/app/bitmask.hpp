@@ -70,7 +70,7 @@ struct BitMask
 	BitMask& operator=(const std::initializer_list<T>& list) noexcept
 	{
 		// если список пустой значение можно сбросить
-		if(!list.siize())
+		if(!list.size())
 			_value = 0;
 
 		for(const auto& index : list)
@@ -108,6 +108,8 @@ struct BitMask
 	 * @param index Бит, который нужно добавить в набора
 	 * @tparam T Тип элемента. Должен быть таким же, как и тип элемента набора
 	 */
+
+#include <iostream>
 	template<typename T, typename = typename std::enable_if<std::is_same<Enum, T>::value>::type>
 	inline BitMask operator+(T index) const noexcept
 	{
@@ -207,27 +209,14 @@ struct BitMask
 	}
 
 	/**
-	 * @brief Выставляем биты в наборе
-	 * @param args Индексы битов, которые мы хотим выставить в true в наборе
-	 * @tparam Args Parameter pack значений, которые нужно установить в наборе, должен быть того же типа, что и Enum
-	 */
-	template<typename... Args, typename = typename std::enable_if<all_same<Enum, Args...>::value>::type>
-	inline void set(Args&&... args) noexcept
-	{
-		for(const auto& arg : {args...})
-		{
-			set_impl(arg);
-		}
-	}
-
-	/**
-	 * @brief Устанавливаем значение в маску. Затирает все предыдущие значения
+	 * @brief Устанавливаем значение в маску
 	 * @param value Значение типа, который хранится в наборе
 	 * @tparam T Тип значения. Должен быть таким же, как и тип элемента набора
 	 */
-	inline void set(type_t value) noexcept
+	template<typename T, typename = typename std::enable_if<std::is_same<Enum, T>::value>::type>
+	inline void set(T index) noexcept
 	{
-		_value = value & get_strip_mask();
+		set_impl(index);
 	}
 
 	/**
