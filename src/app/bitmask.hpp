@@ -54,10 +54,7 @@ struct BitMask
 	 */
 	explicit constexpr BitMask(type_t value) noexcept
 	{
-		//когда присваиваем значение обрезаем лишние биты
-		type_t mask = ~static_cast<type_t>(0);
-		mask >>= sizeof(type_t) * allignment - N;
-		_value = value & mask;
+		_value = value & get_strip_mask();
 	}
 
 	BitMask& operator=(const BitMask& other) = default;
@@ -70,13 +67,19 @@ struct BitMask
 	 * @tparam T Тип элемента списка. Должен быть таким же, как и тип элемента набора
 	 */
 	template<typename T, typename = typename std::enable_if<std::is_same<Enum, T>::value>::type>
-	BitMask& operator=(const std::initializer_list<T>& list)
+	BitMask& operator=(const std::initializer_list<T>& list) noexcept
 	{
-		if(list.size() > N) throw std::out_of_range("BitMask: initializer list too long");
+		// если список пустой значение можно сбросить
+		if(!list.siize())
+			_value = 0;
+
 		for(const auto& index : list)
 		{
 			_value |= static_cast<type_t>(1) << static_cast<type_t>(index);
 		}
+
+		// удаляем  лишние биты
+		_value = _value &  get_strip_mask();
 		return *this;
 	}
 
@@ -87,10 +90,7 @@ struct BitMask
 	 */
 	BitMask& operator=(type_t value) noexcept
 	{
-		//когда присваиваем значение обрезаем лишние биты
-		type_t mask = ~static_cast<type_t>(0);
-		mask >>= sizeof(type_t) * allignment - N;
-		_value = value & mask;
+		_value = value & get_strip_mask();
 		return *this;
 	}
 
@@ -194,9 +194,7 @@ struct BitMask
 	 */
 	inline bool all() const noexcept
 	{
-		type_t mask = ~static_cast<type_t>(0);
-		mask >>= sizeof(type_t) * allignment - N;
-		return _value == mask;
+		return _value == get_strip_mask();
 	}
 
 	/**
@@ -229,10 +227,7 @@ struct BitMask
 	 */
 	inline void set(type_t value) noexcept
 	{
-		//когда присваиваем значение обрезаем лишние биты
-		type_t mask = ~static_cast<type_t>(0);
-		mask >>= sizeof(type_t) * allignment - N;
-		_value = value & mask;
+		_value = value & get_strip_mask();
 	}
 
 	/**
@@ -379,6 +374,18 @@ private:
 	{
 		_value &= ~(static_cast<type_t>(1) << static_cast<type_t>(index));
 	}
+
+	/**
+	 * @brief Получаем маску
+	 * @return маска для обрезки бит
+	 */
+	static constexpr type_t get_strip_mask() noexcept
+	{
+		type_t mask = ~static_cast<type_t>(0);
+		mask >>= sizeof(type_t) * allignment - N;
+		return mask;
+	}
+
 public:
 
 	// Оператор [] и метод at абсолютно одинаковы в данном случае, потому что безопасность по переполнению не нужна из за строгости типа Enum
