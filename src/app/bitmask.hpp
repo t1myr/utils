@@ -161,14 +161,32 @@ struct BitMask
 	 * @param Args Parameter pack из индексов, которые проверяем на включение в текущий набор. Должны быть такого же типа, как и элементы набора.
 	 * @return true, если по всем переданным индексам биты выставлены, иначе false
 	 */	
-	template<typename... Args, typename = typename std::enable_if<all_same<Enum, Args...>::value>::type>
-	inline bool has(Args&&... args) const noexcept
+	template<typename T, typename... Args, typename = typename std::enable_if<(sizeof...(Args) > 0)>::type>
+	inline bool has(T index, Args&&... args) const noexcept
 	{
+		static_assert(std::is_same<Enum, T>::value, "has parameters type must be same as Enum");
+		static_assert(all_same<Enum, Args...>::value, "has parameters type must be same as Enum");
+
+		if(!has_impl(index)) return false;
+
 		for(const auto& arg : {args...})
 		{
 			if(!has_impl(arg)) return false;
 		}
 		return true;
+	}
+
+	/**
+	 * @brief Проверяем, выставлен ли в наборе бит в true для переданного индекса
+	 * @param index Индекс
+	 * @return true, если по переданному индексу бит выставлен
+	 */	
+	template<typename T>
+	inline bool has(T index) const noexcept
+	{
+		static_assert(std::is_same<Enum, T>::value, "has parameters type must be same as Enum");
+
+		return has_impl(index);
 	}
 
 	/**
@@ -220,24 +238,24 @@ struct BitMask
 	}
 
 	/**
+	 * @brief Сбрасываем бит в маске
+	 * @param index Индекс бита, который мы хотим выставить в false в маске
+	 * @tparam T тип параметра, должен совпадать с Enum
+	 */
+	template<typename T, typename = typename std::enable_if<std::is_same<Enum, T>::value>::type>
+	inline void reset(T index) noexcept
+	{
+		reset_impl(index);
+	}
+
+	/**
 	 * @brief Сбрасываем биты в наборе
 	 * @param args Индексы битов, которые мы хотим выставить в false в наборе
 	 * @tparam Args Parameter pack значений, которые нужно сбросить в наборе, должен быть того же типа, что и Enum
 	 */
-	template<typename... Args, typename = typename std::enable_if<all_same<Enum, Args...>::value>::type>
-	inline void reset(Args&&... args) noexcept
+	inline void reset() noexcept
 	{
-		//проверяем количество аргументов
-		if(!sizeof...(args))
-		{
-			//если аргументов нет, сбрасываем значение
-			_value = 0;
-			return;
-		}
-
-		//если аргументы есть - вызываем хелпер
-		for(const auto arg : {args...})
-			reset_impl(arg);
+		_value = 0;
 	}
 
 	/**
