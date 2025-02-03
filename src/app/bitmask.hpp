@@ -292,12 +292,12 @@ struct BitMask
 	 */
 	const char* to_string() const noexcept
 	{
-		char str[N];
-		for(type_t i = 0; i < N; ++i)
+		static char str[sizeof(type_t) * allignment + 1];
+		for(type_t i = 0; i < sizeof(type_t) * allignment; ++i)
 		{
-			type_t mask = static_cast<type_t>(1) << i;
-			str[i] = (_value & mask) ? '1' : '0';
+			str[i] = (_value & (static_cast<type_t>(1) << (sizeof(type_t) * 8 - i - 1))) ? '1' : '0';
 		}
+		str[sizeof(type_t) * allignment] = '\0';
 		return str;
 	}
 
