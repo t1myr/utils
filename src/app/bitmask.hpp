@@ -290,14 +290,11 @@ struct BitMask
 	 * @brief Возвращаем строковое представление набора
 	 * @return Строковое представление набора в бинарном виде
 	 */
-	const char* to_string() const noexcept
+	std::string to_string() const noexcept
 	{
-		static char str[sizeof(type_t) * allignment + 1];
+		std::string str(sizeof(type_t) * allignment, '0');
 		for(type_t i = 0; i < sizeof(type_t) * allignment; ++i)
-		{
 			str[i] = (_value & (static_cast<type_t>(1) << (sizeof(type_t) * 8 - i - 1))) ? '1' : '0';
-		}
-		str[sizeof(type_t) * allignment] = '\0';
 		return str;
 	}
 

@@ -190,7 +190,7 @@ namespace
     {
         BitMask<StronglyTypedEnum, StronglyTypedEnum::stMaxValue> en(0b00000111);
 
-        EXPECT_STREQ(en.to_string(), "00000111");
+        EXPECT_STREQ(en.to_string().c_str(), "00000111");
     }
 
     TEST(BitMaskTest, At)

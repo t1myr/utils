@@ -228,9 +228,9 @@ struct BitSet
 	 * @brief Возвращаем строковое представление набора
 	 * @return Строковое представление набора в бинарном виде
 	 */
-	const char* to_string() const noexcept
+	std::string to_string() const noexcept
 	{
-		char str[N];
+		std::string str(N, '0');
 		for(type_t i = 0; i < N; ++i)
 		{
 			type_t mask = static_cast<type_t>(1) << i;

@@ -8,6 +8,8 @@ set(SOURCE_FILES
     bimap.hpp
     template_string.hpp
     optional.hpp
+    source_location.hpp
+    my_exception.hpp
 )
 
 add_library(utils_lib SHARED STATIC ${SOURCE_FILES})

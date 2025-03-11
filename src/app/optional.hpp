@@ -412,7 +412,7 @@ struct optional
      * @brief Оператор разыменования
      * @details Если объект не инициализирован, результат UB
      */
-    constexpr T& operator*() &
+    constexpr T& operator*() & noexcept
     {
         return _storage._val;
     }
@@ -421,7 +421,7 @@ struct optional
      * @brief Оператор разыменования
      * @details Если объект не инициализирован, результат UB
      */
-    constexpr const T& operator*() const &
+    constexpr const T& operator*() const& noexcept
     {
         return _storage._val;
     }
@@ -430,7 +430,7 @@ struct optional
      * @brief Оператор разыменования
      * @details Если объект не инициализирован, результат UB
      */
-    constexpr T&& operator*() && 
+    constexpr T&& operator*() && noexcept
     {
         return std::move(_storage._val);
     }
@@ -439,7 +439,7 @@ struct optional
      * @brief Оператор разыменования
      * @details Если объект не инициализирован, результат UB
      */
-    constexpr const T&& operator*() const && 
+    constexpr const T&& operator*() const&& noexcept
     {
         return std::move(_storage._val);
     }
@@ -448,36 +448,18 @@ struct optional
      * @brief Pointer-like operator
      * @details Если объект не инициализирован, результат UB
      */
-    constexpr T& operator->() &
+    constexpr T* operator->() noexcept
+    {
+        return &_storage._val;
+    }
+
+    /**
+     * @brief Pointer-like operator
+     * @details Если объект не инициализирован, результат UB
+     */
+    constexpr const T* operator->() const noexcept
     {
         return _storage._val;
-    }
-
-    /**
-     * @brief Pointer-like operator
-     * @details Если объект не инициализирован, результат UB
-     */
-    constexpr const T& operator->() const &
-    {
-        return _storage._val;
-    }
-
-    /**
-     * @brief Pointer-like operator
-     * @details Если объект не инициализирован, результат UB
-     */
-    constexpr T&& operator->() &&
-    {
-        return std::move(_storage._val);
-    }
-
-    /**
-     * @brief Pointer-like operator
-     * @details Если объект не инициализирован, результат UB
-     */
-    constexpr const T&& operator->() const &&
-    {
-        return std::move(_storage._val);
     }
 
     /**

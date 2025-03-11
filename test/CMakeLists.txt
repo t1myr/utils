@@ -6,7 +6,7 @@ add_subdirectory(lib/googletest)
 include_directories(${UTILS_HEADERS_DIR})
 include_directories(lib/googletest/googletest/include)
 
-set(SOURCE_FILES main.cpp src/utils_tests.cpp src/bitmask_test.cpp src/bitset_test.cpp)
+set(SOURCE_FILES main.cpp src/utils_tests.cpp src/bitmask_test.cpp src/bitset_test.cpp src/optional_test.cpp)
 
 add_executable(utils_tests ${SOURCE_FILES})
 target_link_libraries(utils_tests utils_lib gtest)
